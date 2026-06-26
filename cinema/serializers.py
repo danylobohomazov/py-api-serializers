@@ -12,13 +12,13 @@ class GenreSerializer(serializers.ModelSerializer):
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
-        fields = ("first_name", "last_name", "full_name")
+        fields = ("id", "first_name", "last_name", "full_name")
 
 
 class CinemaHallSerializer(serializers.ModelSerializer):
     class Meta:
         model = CinemaHall
-        fields = ("name", "rows", "seats_in_row", "capacity")
+        fields = ("id", "name", "rows", "seats_in_row", "capacity")
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -70,6 +70,10 @@ class MovieSessionListSerializer(MovieSessionSerializer):
         source="cinema_hall",
         slug_field="capacity"
     )
+
+    class Meta:
+        model = MovieSession
+        fields = ("id", "show_time", "movie_title", "cinema_hall_name", "cinema_hall_capacity")
 
 
 class MovieSessionRetrieveSerializer(MovieSessionSerializer):
