@@ -1,6 +1,7 @@
 from typing import Any
 
-from rest_framework import viewsets
+from django.db.models import QuerySet
+from rest_framework import viewsets, serializers
 
 from cinema.models import (
     Genre,
@@ -30,13 +31,13 @@ class GenreViewSet(viewsets.ModelViewSet):
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
 
-    def get_queryset(self) -> Any:
+    def get_queryset(self) -> QuerySet[Movie]:
         queryset = self.queryset
         if self.action in ("list", "retrieve"):
             return queryset.prefetch_related("actors", "genres")
         return queryset
 
-    def get_serializer_class(self) -> Any:
+    def get_serializer_class(self) -> type[serializers.Serializer]:
         if self.action == "list":
             return MovieListSerializer
         elif self.action == "retrieve":
@@ -57,13 +58,13 @@ class CinemaHallViewSet(viewsets.ModelViewSet):
 class MovieSessionViewSet(viewsets.ModelViewSet):
     queryset = MovieSession.objects.all()
 
-    def get_queryset(self) -> Any:
+    def get_queryset(self) -> QuerySet[MovieSession]:
         queryset = self.queryset
         if self.action in ("list", "retrieve"):
             return queryset.select_related("movie", "cinema_hall")
         return queryset
 
-    def get_serializer_class(self) -> Any:
+    def get_serializer_class(self) -> type[serializers.Serializer]:
         if self.action == "list":
             return MovieSessionListSerializer
         elif self.action == "retrieve":
